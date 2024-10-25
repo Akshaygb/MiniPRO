@@ -1,0 +1,57 @@
+.body
+{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 50px;
+    background: linear-gradient(to right, rgb(188, 214, 226), rgb(237, 252, 178)); 
+    padding:0px;
+    margin: 0px;
+    transition: font-size 1s ease;
+
+}
+.first{
+    font-size: 100px;
+}
+.normal
+{
+    font-size: 50px;
+}
+.button {
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+    padding: 15px 30px;
+    margin-top: 20px;
+    background:transparent;
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    cursor: pointer;
+    border: 2px solid rgba(0,0,0,.3);
+    box-shadow: 0 0 10px rgba(0,0,0,.3);
+    
+}
+.button.visible {
+    display: block; 
+}
+
+button:hover{
+    background-color: #111211;
+    color: aliceblue;
+}
+.link
+{
+    text-decoration: none;
+}
+.link::after
+{
+    color: #111211;
+}
+.link:hover
+{
+   color: azure;
+}
