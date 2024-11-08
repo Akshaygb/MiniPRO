@@ -1,12 +1,16 @@
 import React from 'react'
 import { useState,useEffect} from 'react'
+import { useNavigate } from 'react-router-dom';
 import './Login.css'
+import Dashboard from './Dashboard.js';
+import axios from 'axios';
 
 export default function Login() {
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState("");
     const [forData1,setFormData1]=useState("")
     const [forData2,setFormData2]=useState("")
+    const navigate=useNavigate();
     const toggle=(e,type)=>
     {
       e.preventDefault();
@@ -18,6 +22,67 @@ export default function Login() {
       console.log('Form Data 1:', forData1);
       console.log('Form Data 2:', forData2);
     };
+    const sing=(e)=>{
+      e.preventDefault()
+       const data={teacher:formData,
+        password:forData1,
+        conf:forData2
+       }
+       try{
+        axios.post("http://localhost:5000/singin",data)
+        .then((res)=>{
+          window.alert(res.data.message);
+          if(res.status===201)
+          {
+            navigate('/dashboard');
+          }
+          
+          
+       }
+        )
+        .catch((error)=>
+        {
+          const errorMessage = error.response?.data?.message || "An error occurred";
+      window.alert(errorMessage);
+        })
+    }
+    catch(error){
+      console.log(error)
+      }
+      setFormData("");
+          setFormData1("")
+          setFormData2("")
+  }
+  const login=(e)=>
+  {
+    e.preventDefault()
+    const data={
+      teacher:formData,
+      password:forData1
+    }
+    try{
+       axios.post("http://localhost:5000/login",data)
+       .then((res)=>{
+         window.alert(res.data.message)
+         if( res.status==201)
+         {
+          navigate('/dashboard');
+         }
+         
+       })
+       .catch((error)=>{
+        const errorhandle=error.response?.data?.message||"error try again"
+        window.alert(errorhandle)
+       })
+       
+    }
+    catch(error)
+    {
+      console.log("error")
+    }
+    setFormData("");
+          setFormData1("")
+  }
 
   return (
     <div className='containe'>
@@ -36,7 +101,7 @@ export default function Login() {
                 <input type="password" className='from-input' placeholder='Password' value={forData1} onChange={(e)=>{setFormData1(e.target.value)}} />
               </div>
               <a  className="forget" href="">Forgot password</a>
-              <button type='submit'className="auth-button">Login</button>
+              <button type='submit'className="auth-button" onClick={login}>Login</button>
               <a href="" className="auto-link" onClick={(e)=>{toggle(e,'s')}}>Singup now</a>
             </form>
             <form className={`form ${!isLogin ? 'active' : ''}`}>
@@ -47,10 +112,10 @@ export default function Login() {
                 <input type="password" className='from-input' placeholder='Password' value={forData1} onChange={(e)=>{setFormData1(e.target.value)} } />
               </div>
               <div className='forngoup'>
-                <input type="password" className='from-input' placeholder=' Confirm Password' value={forData1} onChange={(e)=>{setFormData1(e.target.value)} } />
+                <input type="password" className='from-input' placeholder=' Confirm Password' value={forData2} onChange={(e)=>{setFormData2(e.target.value)} } />
               </div>
-              <button className="auth-button"> Singup</button>
-              <p>Already have an account? <a  className="auto-link"href="#" onClick={(e)=>{toggle(e,'login')}}> Login</a></p>
+              <button className="auth-button" onClick={sing}> Singin</button>
+              <p>Already have an account? <a  className="auto-link"  onClick={(e)=>{toggle(e,'login')}}> Login</a></p>
               <div>
 
               </div>
@@ -61,3 +126,4 @@ export default function Login() {
 
   )
 }
+
