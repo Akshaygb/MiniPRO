@@ -2,8 +2,8 @@ import React from 'react'
 import { useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import './Login.css'
-import Dashboard from './Dashboard.js';
 import axios from 'axios';
+import { FaUser, FaLock, FaSignInAlt, FaUserPlus, FaIdBadge } from 'react-icons/fa';
 
 export default function Login() {
     const [isLogin, setIsLogin] = useState(true);
@@ -34,7 +34,7 @@ export default function Login() {
           window.alert(res.data.message);
           if(res.status===201)
           {
-            navigate('/dashboard');
+            setIsLogin(true);
           }
           
           
@@ -95,26 +95,35 @@ export default function Login() {
            <div className='loginform'>
             <form className={`form ${isLogin ? 'active' : ''}`}>
               <div className='forngoup'>
+                <FaIdBadge className="input-icon" />
                 <input type="text" className='from-input' placeholder='Teacher ID'  value={formData} onChange={(e)=>{setFormData(e.target.value)}} />
               </div>
               <div className='forngoup'>
+                <FaLock className="input-icon" />
                 <input type="password" className='from-input' placeholder='Password' value={forData1} onChange={(e)=>{setFormData1(e.target.value)}} />
               </div>
               <a  className="forget" href="">Forgot password</a>
-              <button type='submit'className="auth-button" onClick={login}>Login</button>
+              <button type='submit' className="auth-button" onClick={login}>
+                <FaSignInAlt /> Login
+              </button>
               <a href="" className="auto-link" onClick={(e)=>{toggle(e,'s')}}>Singup now</a>
             </form>
             <form className={`form ${!isLogin ? 'active' : ''}`}>
                 <div className='forngoup'>
+                  <FaIdBadge className="input-icon" />
                   <input type="text"  className='from-input' onChange={(e)=>{setFormData(e.target.value)} } value={formData} placeholder='Teacher ID' />
                </div>
               <div className='forngoup'>
+                <FaLock className="input-icon" />
                 <input type="password" className='from-input' placeholder='Password' value={forData1} onChange={(e)=>{setFormData1(e.target.value)} } />
               </div>
               <div className='forngoup'>
+                <FaLock className="input-icon" />
                 <input type="password" className='from-input' placeholder=' Confirm Password' value={forData2} onChange={(e)=>{setFormData2(e.target.value)} } />
               </div>
-              <button className="auth-button" onClick={sing}> Singin</button>
+              <button className="auth-button" onClick={sing}>
+                <FaUserPlus /> Singin
+              </button>
               <p>Already have an account? <a  className="auto-link"  onClick={(e)=>{toggle(e,'login')}}> Login</a></p>
               <div>
 
@@ -125,5 +134,4 @@ export default function Login() {
     </div>
 
   )
-}
-
+}  
