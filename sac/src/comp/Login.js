@@ -1,137 +1,220 @@
-import React from 'react'
-import { useState,useEffect} from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'
+import './styles/Login.css'
 import axios from 'axios';
-import { FaUser, FaLock, FaSignInAlt, FaUserPlus, FaIdBadge } from 'react-icons/fa';
+ const Login=({setUser}) =>{
+  const [userName, setName] = useState("");
+  const [userpass, setPass] = useState("");
+  const [usersem, setsem] = useState("");
 
-export default function Login() {
-    const [isLogin, setIsLogin] = useState(true);
-    const [formData, setFormData] = useState("");
-    const [forData1,setFormData1]=useState("")
-    const [forData2,setFormData2]=useState("")
-    const navigate=useNavigate();
-    const toggle=(e,type)=>
-    {
-      e.preventDefault();
-       setIsLogin(type==='login');
-    }
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log('Form Data:', formData);
-      console.log('Form Data 1:', forData1);
-      console.log('Form Data 2:', forData2);
-    };
-    const sing=(e)=>{
-      e.preventDefault()
-       const data={teacher:formData,
-        password:forData1,
-        conf:forData2
-       }
-       try{
-        axios.post("http://localhost:5000/singin",data)
-        .then((res)=>{
-          window.alert(res.data.message);
-          if(res.status===201)
-          {
-            setIsLogin(true);
-          }
-          
-          
-       }
-        )
-        .catch((error)=>
-        {
-          const errorMessage = error.response?.data?.message || "An error occurred";
-      window.alert(errorMessage);
-        })
-    }
-    catch(error){
-      console.log(error)
-      }
-      setFormData("");
-          setFormData1("")
-          setFormData2("")
-  }
-  const login=(e)=>
+  const [state, setState] = useState("");
+  const navigate=useNavigate();
+  const adminbutton=()=>
   {
-    e.preventDefault()
-    const data={
-      teacher:formData,
-      password:forData1
-    }
-    try{
-       axios.post("http://localhost:5000/login",data)
-       .then((res)=>{
-         window.alert(res.data.message)
-         if( res.status==201)
-         {
-          navigate('/dashboard');
-         }
-         
-       })
-       .catch((error)=>{
-        const errorhandle=error.response?.data?.message||"error try again"
-        window.alert(errorhandle)
-       })
-       
-    }
-    catch(error)
+    const data = {
+      "id": userName,
+      "password": userpass
+  };
+
+  axios.post("http://localhost:5000/admin_login", data)
+      // .then((response) => {
+      //     if (response.status === 201) {
+      //         alert("Login Successful");
+      //         navigate('/admin')
+      //     }
+      // })
+      
+      .then((response)=>{
+          if(response.status===201)
+          {
+            setUser(response.data.user)
+            alert("Login Successful")
+            navigate("/admin")
+          }
+      })
+      .catch((error) => {
+          if (error.response) {
+              console.error('Error:', error.response.data);
+              alert(`Error: ${error.response.data.error}`);
+          } else {
+              console.error('Error:', error.message);
+              alert('Unknown error occurred.');
+          }
+      });
+};
+   
+  
+  const studentbutton=()=>
     {
-      console.log("error")
+      const data = {
+        "id": userName,
+        "sem":usersem,
+        "password": userpass
+    };
+
+    axios.post("http://localhost:5000/student_login", data)
+        .then((response) => {
+            if (response.status === 201) {
+              setUser(response.data.user)
+                alert("Login Successful");
+                navigate('/student')
+            }
+        })
+        .catch((error) => {
+            if (error.response) {
+                console.error('Error:', error.response.data);
+                alert(`Error: ${error.response.data.error}`);
+            } else {
+                console.error('Error:', error.message);
+                alert('Unknown error occurred.');
+            }
+        });
+};
+
+      
+    
+    
+    const teacherbutton = () => {
+      const data = {
+          "id": userName,
+          "password": userpass
+      };
+  
+      axios.post("http://localhost:5000/teacher_login", data)
+          .then((response) => {
+              if (response.status === 201) {
+                setUser(response.data.user)
+                  alert("Login Successful");
+                  navigate('/dashboard');
+              }
+          })
+          .catch((error) => {
+              if (error.response) {
+                  console.error('Error:', error.response.data);
+                  alert(`Error: ${error.response.data.error}`);
+              } else {
+                  console.error('Error:', error.message);
+                  alert('Unknown error occurred.');
+              }
+          });
+  };
+  
+      
+  const render = () => {
+    switch (state) {
+      case "admin":
+        return (
+          <div>
+            <label className="form-label" htmlFor="adminId">Admin ID:</label>
+            <input
+              className="form-input"
+              type="text"
+              id="adminId"
+              placeholder="Enter Admin ID"
+              onChange={(e) => setName(e.target.value)}
+              value={userName}
+            /><br/>
+            <label className="form-label" htmlFor="password">Password:</label>
+            <input
+              className="form-input"
+              type="password"
+              id="password"
+              placeholder="Enter Password"
+              onChange={(e) => setPass(e.target.value)}
+              value={userpass}
+            /><br/>
+            <button className="form-button" onClick={adminbutton}>Login</button>
+          </div>
+        );
+      case "student":
+        return (
+          <div>
+            <label className="form-label" htmlFor="adminId">Student USN:</label>
+            <input
+              className="form-input"
+              type="text"
+              id="adminId"
+              placeholder="Enter Student USN"
+              onChange={(e) => setName(e.target.value)}
+              value={userName}
+            /><br/>
+            <label className="form-label" htmlFor="adminId">Student Sem:</label>
+            <input
+              className="form-input"
+              type="number"
+              id="adminId"
+              placeholder="Enter Student Sem"
+              onChange={(e) => setsem(e.target.value)}
+              value={usersem}
+            /><br/>
+            <label className="form-label" htmlFor="password">Password:</label>
+            <input
+              className="form-input"
+              type="password"
+              id="password"
+              placeholder="Enter Password"
+              onChange={(e) => setPass(e.target.value)}
+              value={userpass}
+            /><br/>
+            <button className="form-button" onClick={studentbutton}>Login</button>
+          </div>
+        );
+      case "teacher":
+        return (
+          <div>
+            <label className="form-label" htmlFor="adminId">Teacher ID:</label>
+            <input
+              className="form-input"
+              type="text"
+              id="adminId"
+              placeholder="Teacher ID"
+              onChange={(e) => setName(e.target.value)}
+              value={userName}
+            /><br/>
+            <label className="form-label" htmlFor="password">Password:</label>
+            <input
+              className="form-input"
+              type="password"
+              id="password"
+              placeholder="Enter Password"
+              onChange={(e) => setPass(e.target.value)}
+              value={userpass}
+            /><br/>
+            <button className="form-button" onClick={teacherbutton}>Login</button>
+          </div>
+        );
     }
-    setFormData("");
-          setFormData1("")
-  }
+  };
 
   return (
-    <div className='containe'>
-        <div className='login'>
-            <h1 className= "head" >Login Form</h1>
-           <div className='tab-cont'>
-            <button className={`loginb ${isLogin?'active':'isactive'}`} onClick={(e)=>{toggle(e,'login')}}>Login</button>
-            <button className={`loginb ${!isLogin?'active':'isactive'}`} onClick={(e)=>{toggle(e,'signup')}}>Singup</button>
-           </div>
-           <div className='loginform'>
-            <form className={`form ${isLogin ? 'active' : ''}`}>
-              <div className='forngoup'>
-                <FaIdBadge className="input-icon" />
-                <input type="text" className='from-input' placeholder='Teacher ID'  value={formData} onChange={(e)=>{setFormData(e.target.value)}} />
-              </div>
-              <div className='forngoup'>
-                <FaLock className="input-icon" />
-                <input type="password" className='from-input' placeholder='Password' value={forData1} onChange={(e)=>{setFormData1(e.target.value)}} />
-              </div>
-              <a  className="forget" href="">Forgot password</a>
-              <button type='submit' className="auth-button" onClick={login}>
-                <FaSignInAlt /> Login
-              </button>
-              <a href="" className="auto-link" onClick={(e)=>{toggle(e,'s')}}>Singup now</a>
-            </form>
-            <form className={`form ${!isLogin ? 'active' : ''}`}>
-                <div className='forngoup'>
-                  <FaIdBadge className="input-icon" />
-                  <input type="text"  className='from-input' onChange={(e)=>{setFormData(e.target.value)} } value={formData} placeholder='Teacher ID' />
-               </div>
-              <div className='forngoup'>
-                <FaLock className="input-icon" />
-                <input type="password" className='from-input' placeholder='Password' value={forData1} onChange={(e)=>{setFormData1(e.target.value)} } />
-              </div>
-              <div className='forngoup'>
-                <FaLock className="input-icon" />
-                <input type="password" className='from-input' placeholder=' Confirm Password' value={forData2} onChange={(e)=>{setFormData2(e.target.value)} } />
-              </div>
-              <button className="auth-button" onClick={sing}>
-                <FaUserPlus /> Singin
-              </button>
-              <p>Already have an account? <a  className="auto-link"  onClick={(e)=>{toggle(e,'login')}}> Login</a></p>
-              <div>
+    <div className="dashboard-container1">
+      <div className="dashboard-content">
+        <nav className="nav">
+          <ul className="nav-ul">
+            <li
+              className={`nav-li ${state === "admin" ? "active" : ""}`}
+              onClick={() => setState("admin")}
+            >
+              Admin
+            </li>
+            <li
+              className={`nav-li ${state === "teacher" ? "active" : ""}`}
+              onClick={() => setState("teacher")}
+            >
+              Teacher
+            </li>
+            <li
+              className={`nav-li ${state === "student" ? "active" : ""}`}
+              onClick={() => setState("student")}
+            >
+              Student
+            </li>
+          </ul>
+        </nav>
 
-              </div>
-            </form>
-           </div>
-        </div>
+        <div>{render()}</div>
+      </div>
     </div>
-
-  )
-}  
+  );
+}
+export default Login;

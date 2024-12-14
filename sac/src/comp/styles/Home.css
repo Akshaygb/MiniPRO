@@ -1,0 +1,65 @@
+.body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    text-align: center;
+    font-size: 50px;
+    background: url('bgk.webp'), linear-gradient(to right, rgb(214, 232, 240), rgb(145, 215, 228)); 
+    background-size: cover; 
+    background-position:top; 
+    padding: 0px;
+    margin: 0px;
+    transition: font-size 1s ease, background-color 0.5s ease; /* Smooth transition for font and background */
+}
+
+.first {
+    font-size: 100px;
+}
+
+.normal {
+    font-size: 50px;
+}
+
+.button {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    padding: 15px 30px;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white for a clean effect */
+    backdrop-filter: blur(15px); /* Subtle blur for modern look */
+    border-radius: 30px;
+    cursor: pointer;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Softer shadow for depth */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+}
+
+.button:hover {
+    background-color: #007bff; /* Blue hover effect */
+    color: white;
+    transform: translateY(-2px); /* Subtle lift on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Slightly stronger shadow */
+}
+
+.link {
+    text-decoration: none;
+    color: inherit; /* Match link color with button text */
+}
+
+.link:hover {
+    text-decoration: underline; /* Underline on hover for better indication */
+    color: #ffffff;
+}
+
+/* Add a container style for buttons for better alignment */
+.button-container {
+    display: flex;
+    gap: 15px; 
+    justify-content: center; /* Center buttons horizontally */
+    flex-wrap: wrap; /* Adjust for smaller screens */
+}

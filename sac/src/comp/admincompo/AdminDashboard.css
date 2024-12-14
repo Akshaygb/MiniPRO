@@ -1,0 +1,156 @@
+/* General styling */
+.admin-dashboard {
+  display: flex;
+  height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  background: #f4f6f8;
+  color: #2c3e50;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #ecf0f1;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  font-size: 18px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  text-transform: capitalize;
+}
+
+.sidebar ul li:hover {
+  background: #1abc9c;
+  color: white;
+}
+
+.sidebar ul li.active {
+  background: #34495e;
+  color: #ecf0f1;
+  font-weight: bold;
+}
+
+/* Main content styling */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.section-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #34495e;
+  text-align: center;
+}
+
+/* Scrollbar styling */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #1e3c72;
+  border-radius: 10px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #2a5298;
+}
+/* General input styling */
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="file"]:focus {
+  border-color: #1abc9c;
+  box-shadow: 0 0 5px rgba(26, 188, 156, 0.8);
+  outline: none;
+}
+
+/* Button styling */
+button[type="submit"] {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #16a085;
+}
+
+/* Form layout adjustments */
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: inline-block;
+  color: #34495e;
+}
+
+/* Container for form sections */
+.submit-document-container {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Error message styling (if needed) */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}

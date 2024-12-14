@@ -1,97 +1,241 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./TeacherDashboard.css";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './styles/TeacherDashboard.css';
 
-const Dashboard = () => {
-  const [photo, setPhoto] = useState("https://via.placeholder.com/150");
+const Dashboard = ({ user, setStudetaile }) => {
+  const navigate=useNavigate()
+    const [selectedSection, setSelectedSection] = useState('home');
+    const [SubId, setSubId] = useState('');
+    const [StuSem, setStuSem] = useState('');
 
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPhoto(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    const handleStudentdetaile = () => {
+        const data = {
+            sem: StuSem,
+            "subject code": SubId
+        };
+        axios.post("http://localhost:5000/student_detaile", data)
+            .then((response) => {
+                if (response.status === 201) {
+                    setStudetaile(response.data.user);
+                    console.log(response.data.user)
+                    navigate("/student_details")
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Something went wrong");
+            });
+    };
 
-  // Dashboard buttons configuration
-  const dashboardButtons = [
-    { label: "Course Details", icon: "📋", link: "/coursedetails" },
-    { label: "Student Details", icon: "👥", link: "/studentdetails" },
-    { label: "Upload", icon: "⬆️", link: "/uploaddata" },
-    { label: "Attendance View", icon: "👀", link: "/attedenceview" },
-    { label: "Visual View", icon: "📊", link: "/visualview" },
-    { label: "Subject", icon: "➕", link: "/subject" },
-  ];
+    const handleAttedenceView = () => {
+        const data = {
+            Teacher_id: user.id,
+            sem: StuSem,
+            "subject code": SubId
+        };
+        axios.post("http://localhost:5000/student_detaile", data)
+            .then((response) => {
+                if (response.status === 201) {
+                    setStudetaile(response.data);
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Something went wrong");
+            });
+    };
 
-  return (
-    <div className="teacher-dashboard">
-      {/* Sidebar Section */}
-      <div className="dashboard-sidebar">
-        <div className="profile-section">
-          <div className="profile-image-container">
-            <img src={photo} alt="Teacher Profile" className="profile-image" />
-            <div className="edit-photo-overlay">
-              <input
-                type="file"
-                id="photoUpload"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className="photo-upload-input"
-              />
-              <label htmlFor="photoUpload" className="edit-photo-btn">
-                Edit Photo
-              </label>
+    const renderSection = () => {
+        switch (selectedSection) {
+            case "home":
+                return <div><button>Welcome to Home</button></div>;
+            case "attedence view":
+                return (
+                    <div>
+                        <div className="section-content">
+                            <div className="submit-document-container">
+                                <h2>Manage Students</h2>
+                                <form onSubmit={(e) => { e.preventDefault(); handleAttedenceView(); }}>
+                                    <div>
+                                        <label>Semester:</label>
+                                        <select
+                                            value={StuSem}
+                                            onChange={(e) => setStuSem(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Semester</option>
+                                            {user.sem.map((sem, index) => (
+                                                <option key={index} value={sem}>
+                                                    {sem}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Subject Code:</label>
+                                        <select
+                                            value={SubId}
+                                            onChange={(e) => setSubId(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Subject Code</option>
+                                            {user.subject_code.map((code, index) => (
+                                                <option key={index} value={code}>
+                                                    {code}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button type="submit">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "student detaile":
+                return (
+                    <div>
+                        <div className="section-content">
+                            <div className="submit-document-container">
+                                <h2>Students Details</h2>
+                                <form onSubmit={(e) => { e.preventDefault(); handleStudentdetaile(); }}>
+                                    <div>
+                                        <label>Semester:</label>
+                                        <select
+                                            value={StuSem}
+                                            onChange={(e) => setStuSem(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Semester</option>
+                                            {user.sem.map((sem, index) => (
+                                                <option key={index} value={sem}>
+                                                    {sem}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Subject Code:</label>
+                                        <select
+                                            value={SubId}
+                                            onChange={(e) => setSubId(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Subject Code</option>
+                                            {user.subject_code.map((code, index) => (
+                                                <option key={index} value={code}>
+                                                    {code}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button type="submit">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "update":
+                return (
+                    <div>
+                        <div className="section-content">
+                            <div className="submit-document-container">
+                                <h2>Update Student Details</h2>
+                                <form onSubmit={(e) => { e.preventDefault(); handleAttedenceView(); }}>
+                                    <div>
+                                        <label>Semester:</label>
+                                        <select
+                                            value={StuSem}
+                                            onChange={(e) => setStuSem(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Semester</option>
+                                            {user.sem.map((sem, index) => (
+                                                <option key={index} value={sem}>
+                                                    {sem}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Subject Code:</label>
+                                        <select
+                                            value={SubId}
+                                            onChange={(e) => setSubId(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Subject Code</option>
+                                            {user.subject_code.map((code, index) => (
+                                                <option key={index} value={code}>
+                                                    {code}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Student USN:</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter Student USN"
+                                            required
+                                        />
+                                    </div>
+                                    <button type="submit">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "notification":
+                return <div>Notification Section</div>;
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className="admin-dashboard">
+            <div className="sidebar">
+                <h2>Teacher Dashboard</h2>
+                <p className="admin-name">Welcome, {user.name}!</p>
+                <p>Teacher ID: {user.id}</p>
+                <ul>
+                    <li
+                        className={selectedSection === 'home' ? 'active' : ''}
+                        onClick={() => setSelectedSection('home')}
+                    >
+                        Home
+                    </li>
+                    <li
+                        className={selectedSection === 'attedence view' ? 'active' : ''}
+                        onClick={() => setSelectedSection('attedence view')}
+                    >
+                        Attendance View
+                    </li>
+                    <li
+                        className={selectedSection === 'student detaile' ? 'active' : ''}
+                        onClick={() => setSelectedSection('student detaile')}
+                    >
+                        Student Details
+                    </li>
+                    <li
+                        className={selectedSection === 'update' ? 'active' : ''}
+                        onClick={() => setSelectedSection('update')}
+                    >
+                        Update
+                    </li>
+                    <li
+                        className={selectedSection === 'notification' ? 'active' : ''}
+                        onClick={() => setSelectedSection('notification')}
+                    >
+                        Notification
+                    </li>
+                </ul>
             </div>
-          </div>
-          <div className="profile-details">
-            <h2>John Doe</h2>
-            <p>Computer Science Teacher</p>
-            <p>Employee ID: TD001</p>
-          </div>
+            <div className="main-content">{renderSection()}</div>
         </div>
-      </div>
-
-      {/* Main Dashboard Section */}
-      <div className="dashboard-main">
-        <div className="dashboard-header">
-          <h1>Teacher Dashboard</h1>
-          <div className="header-actions">
-            <button className="action-button logout-btn">Logout</button>
-          </div>
-        </div>
-
-        <div className="dashboard-grid">
-          {dashboardButtons.map((button, index) => (
-            <div key={index} className="dashboard-grid-item">
-              <div className="grid-item-content">
-                <span className="grid-item-icon">{button.icon}</span>
-                <span className="grid-item-label">
-                  {button.link ? (
-                    <Link to={button.link} className="link-button">
-                      {button.label}
-                    </Link>
-                  ) : (
-                    <button className="link-button">
-                      {button.label}
-                    </button>
-                  )}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Start and End Buttons */}
-        <div className="start-end-buttons">
-          <button className="small-button start-btn">Start</button>
-          <button className="small-button end-btn">End</button>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Dashboard;

@@ -1,0 +1,156 @@
+/* Apply a modern font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Basic page setup */
+.new-home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('img.jpg'); /* Replace with your image path */
+  background-size: cover;
+  background-position: center;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.new-home-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark overlay for more contrast */
+  z-index: 0;
+}
+
+.new-home-title {
+  font-size: 5rem;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 0, 0, 0.5);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: bold;
+  animation: slideIn 1s ease-out, titleFadeIn 4s ease-in-out 1s forwards;
+}
+
+.new-highlight {
+  color: #00bfff;
+  text-shadow: 0 0 10px #111010, 0 0 15px #96d8ee;
+}
+
+.new-home-subtitle {
+  font-size: 1.6rem;
+  color: #d3d3d3;
+  margin-bottom: 3rem;
+  opacity: 0.85;
+  font-weight: 600;
+  animation: fadeIn 1.5s ease-out;
+}
+
+.new-button-group {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.new-home-button {
+  background: linear-gradient(135deg, #333333, #00bfff);
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.8rem 2.5rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.new-home-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: width 0.4s ease;
+  z-index: 1;
+}
+
+.new-home-button:hover::before {
+  width: 100%;
+}
+
+.new-home-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.new-home-button:active {
+  transform: scale(0.98);
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes titleFadeIn {
+  0% {
+    opacity: 0.6;
+    color: white;
+  }
+  50% {
+    opacity: 1;
+    color: white;
+  }
+  100% {
+    opacity: 1;
+    color: white;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-home-title {
+    font-size: 4rem;
+  }
+  .new-home-subtitle {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-home-title {
+    font-size: 3.2rem;
+  }
+  .new-home-subtitle {
+    font-size: 1.2rem;
+  }
+}
