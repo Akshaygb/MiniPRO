@@ -8,6 +8,7 @@ const Dashboard = ({ user, setStudetaile }) => {
     const [selectedSection, setSelectedSection] = useState('home');
     const [SubId, setSubId] = useState('');
     const [StuSem, setStuSem] = useState('');
+    const [atte,setatted]=useState("Start")
 
     const handleStudentdetaile = () => {
         const data = {
@@ -30,7 +31,7 @@ const Dashboard = ({ user, setStudetaile }) => {
 
     const handleAttedenceView = () => {
         const data = {
-            Teacher_id: user.id,
+            Teacher_id: user.Teacher_id,
             sem: StuSem,
             "subject code": SubId
         };
@@ -45,11 +46,97 @@ const Dashboard = ({ user, setStudetaile }) => {
                 alert("Something went wrong");
             });
     };
-
+    const AttedenceButton = () => {
+      
+  
+      if (atte === "Start") {
+        const data = {
+          "Teacher_id": user.teacher_Id,
+          "sem": StuSem,
+          "subject code": SubId,
+          "status":"s"
+      };
+        setatted("Stop");
+          // Request to start attendance 
+          axios.post("http://localhost:5000/start_attendance", data)
+              .then((response) => {
+                  if (response.status === 200) {
+                      alert(response.data.message);
+                      // Change button to 'Stop'
+                  }
+              })
+              .catch((error) => {
+                  console.error("Error starting attendance:", error);
+                  alert("Failed to start attendance");
+              });
+      } else {
+        const data = {
+          "Teacher_id": user.id,
+          "sem": StuSem,
+          "subject code": SubId,
+          "status":"q"
+      };
+          setatted("Start");
+          axios.post("http://localhost:5000/start_attendance", { signal: "q" }) // Send 'q' signal
+              .then((response) => {
+                  if (response.status === 200) {
+                      alert("Attendance stopped successfully!");
+                       // Change button to 'Start'
+                  }
+                  setatted("Start")
+              })
+              .catch((error) => {
+                  console.error("Error stopping attendance:", error);
+                  alert("Failed to stop attendance");
+              });
+      }
+  };
+  
     const renderSection = () => {
         switch (selectedSection) {
             case "home":
-                return <div><button>Welcome to Home</button></div>;
+                return <div>
+                    <div>
+                        <div className="section-content">
+                            <div className="submit-document-container">
+                                <h2>Students Details</h2>
+                                <form onSubmit={(e) => { e.preventDefault(); AttedenceButton(); }}>
+                                    <div>
+                                        <label>Semester:</label>
+                                        <select
+                                            value={StuSem}
+                                            onChange={(e) => setStuSem(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Semester</option>
+                                            {user.sem.map((sem, index) => (
+                                                <option key={index} value={sem}>
+                                                    {sem}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Subject Code:</label>
+                                        <select
+                                            value={SubId}
+                                            onChange={(e) => setSubId(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Subject Code</option>
+                                            {user.subject_code.map((code, index) => (
+                                                <option key={index} value={code}>
+                                                    {code}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button type="submit">{atte}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                  </div>;
             case "attedence view":
                 return (
                     <div>
@@ -199,7 +286,7 @@ const Dashboard = ({ user, setStudetaile }) => {
             <div className="sidebar">
                 <h2>Teacher Dashboard</h2>
                 <p className="admin-name">Welcome, {user.name}!</p>
-                <p>Teacher ID: {user.id}</p>
+                <p>Teacher ID: {user.teacher_Id}</p>
                 <ul>
                     <li
                         className={selectedSection === 'home' ? 'active' : ''}

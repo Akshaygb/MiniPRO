@@ -84,6 +84,7 @@ import axios from 'axios';
           .then((response) => {
               if (response.status === 201) {
                 setUser(response.data.user)
+                console.log(response.data.user)
                   alert("Login Successful");
                   navigate('/dashboard');
               }
