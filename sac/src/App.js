@@ -26,3 +26,34 @@ export default function App() {
       </BrowserRouter>
    );
 }
+// import React from 'react';
+// import axios from 'axios';
+
+// export default function App() {
+//   const handle = () => {
+//     const data = { hi: 'shambhu' };
+
+//     axios
+//       .post('http://localhost:5000/hi', data, {
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       })
+//       .then((response) => {
+//         if (response.status === 201) {
+//           alert('Login Successful');
+//         }
+//       })
+//       .catch((error) => {
+//         console.error('Error:', error.response ? error.response.data : error.message);
+//         alert('Error occurred');
+//       });
+//   };
+
+//   return (
+//     <div>
+//       <input type="text" />
+//       <button onClick={handle}>Submit</button>
+//     </div>
+//   );
+// }

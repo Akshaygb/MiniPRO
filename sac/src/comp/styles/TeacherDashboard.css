@@ -156,3 +156,39 @@
 .end-btn:hover {
   background-color: #d32f2f;
 }
+.select-list-container {
+  margin-top: 20px;
+}
+
+.select-list {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  color: #3583d2;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.select-list:focus {
+  border-color: #3583d2;
+  outline: none;
+}
+
+.select-list option {
+  padding: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.select-list option:hover {
+  background-color: #e0e0e0;
+}
+
+.select-list-label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
+}

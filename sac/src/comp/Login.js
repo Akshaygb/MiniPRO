@@ -2,105 +2,104 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Login.css'
 import axios from 'axios';
- const Login=({setUser}) =>{
+
+const Login = ({ setUser }) => {
   const [userName, setName] = useState("");
   const [userpass, setPass] = useState("");
   const [usersem, setsem] = useState("");
+  const [state, setState] = useState("admin");
+  const [loading, setLoading] = useState(false); // Loading state
+  const navigate = useNavigate();
 
-  const [state, setState] = useState("");
-  const navigate=useNavigate();
-  const adminbutton=()=>
-  {
+  const adminbutton = () => {
+    setLoading(true); // Set loading state to true when request starts
     const data = {
       "id": userName,
       "password": userpass
-  };
-
-  axios.post("http://localhost:5000/admin_login", data)
-      // .then((response) => {
-      //     if (response.status === 201) {
-      //         alert("Login Successful");
-      //         navigate('/admin')
-      //     }
-      // })
-      
-      .then((response)=>{
-          if(response.status===201)
-          {
-            setUser(response.data.user)
-            alert("Login Successful")
-            navigate("/admin")
-          }
-      })
-      .catch((error) => {
-          if (error.response) {
-              console.error('Error:', error.response.data);
-              alert(`Error: ${error.response.data.error}`);
-          } else {
-              console.error('Error:', error.message);
-              alert('Unknown error occurred.');
-          }
-      });
-};
-   
-  
-  const studentbutton=()=>
-    {
-      const data = {
-        "id": userName,
-        "sem":usersem,
-        "password": userpass
     };
 
-    axios.post("http://localhost:5000/student_login", data)
-        .then((response) => {
-            if (response.status === 201) {
-              setUser(response.data.user)
-                alert("Login Successful");
-                navigate('/student')
-            }
-        })
-        .catch((error) => {
-            if (error.response) {
-                console.error('Error:', error.response.data);
-                alert(`Error: ${error.response.data.error}`);
-            } else {
-                console.error('Error:', error.message);
-                alert('Unknown error occurred.');
-            }
-        });
-};
-
-      
-    
-    
-    const teacherbutton = () => {
-      const data = {
-          "id": userName,
-          "password": userpass
-      };
-  
-      axios.post("http://localhost:5000/teacher_login", data)
-          .then((response) => {
-              if (response.status === 201) {
-                setUser(response.data.user)
-                console.log(response.data.user)
-                  alert("Login Successful");
-                  navigate('/dashboard');
-              }
-          })
-          .catch((error) => {
-              if (error.response) {
-                  console.error('Error:', error.response.data);
-                  alert(`Error: ${error.response.data.error}`);
-              } else {
-                  console.error('Error:', error.message);
-                  alert('Unknown error occurred.');
-              }
-          });
+    axios.post("https://localhost:5000/admin_login", data)
+      .then((response) => {
+        setLoading(false); // Set loading state to false when request completes
+        if (response.status === 201) {
+          setUser(response.data.user);
+          localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user in localStorage
+          alert("Login Successful");
+          navigate("/admin");
+        }
+      })
+      .catch((error) => {
+        setLoading(false); // Set loading state to false on error
+        if (error.response) {
+          console.error("Error:", error.response.data);
+          alert(`Error: ${error.response.data.error}`);
+        } else {
+          console.error("Error:", error.message);
+          alert("Unknown error occurred.");
+        }
+      });
   };
-  
-      
+
+  const studentbutton = () => {
+    setLoading(true);
+    const data = {
+      "id": userName,
+      "sem": usersem,
+      "password": userpass
+    };
+
+    axios.post("https://localhost:5000/student_login", data)
+      .then((response) => {
+        setLoading(false);
+        if (response.status === 201) {
+          setUser(response.data.user);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          alert("Login Successful");
+          navigate("/student");
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.response) {
+          console.error("Error:", error.response.data);
+          alert(`Error: ${error.response.data.error}`);
+        } else {
+          console.error("Error:", error.message);
+          alert("Unknown error occurred.");
+        }
+      });
+  };
+
+  const teacherbutton = () => {
+    setLoading(true);
+    const data = {
+      "id": userName,
+      "password": userpass
+    };
+
+    axios.post("http://localhost:5000/teacher_login", data)
+      .then((response) => {
+        setLoading(false);
+        if (response.status === 201) {
+          setUser(response.data.user);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          console.log(response.data.user);
+          alert("Login Successful");
+          navigate("/dashboard");
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.response) {
+          console.error("Error:", error.response.data);
+          alert(`Error: ${error.response.data.error}`);
+        } else {
+          console.error("Error:", error.message);
+          alert("Unknown error occurred.");
+        }
+      });
+  };
+
   const render = () => {
     switch (state) {
       case "admin":
@@ -114,7 +113,7 @@ import axios from 'axios';
               placeholder="Enter Admin ID"
               onChange={(e) => setName(e.target.value)}
               value={userName}
-            /><br/>
+            /><br />
             <label className="form-label" htmlFor="password">Password:</label>
             <input
               className="form-input"
@@ -123,8 +122,10 @@ import axios from 'axios';
               placeholder="Enter Password"
               onChange={(e) => setPass(e.target.value)}
               value={userpass}
-            /><br/>
-            <button className="form-button" onClick={adminbutton}>Login</button>
+            /><br />
+            <button className="form-button" onClick={adminbutton} disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
           </div>
         );
       case "student":
@@ -138,7 +139,7 @@ import axios from 'axios';
               placeholder="Enter Student USN"
               onChange={(e) => setName(e.target.value)}
               value={userName}
-            /><br/>
+            /><br />
             <label className="form-label" htmlFor="adminId">Student Sem:</label>
             <input
               className="form-input"
@@ -147,7 +148,7 @@ import axios from 'axios';
               placeholder="Enter Student Sem"
               onChange={(e) => setsem(e.target.value)}
               value={usersem}
-            /><br/>
+            /><br />
             <label className="form-label" htmlFor="password">Password:</label>
             <input
               className="form-input"
@@ -156,8 +157,10 @@ import axios from 'axios';
               placeholder="Enter Password"
               onChange={(e) => setPass(e.target.value)}
               value={userpass}
-            /><br/>
-            <button className="form-button" onClick={studentbutton}>Login</button>
+            /><br />
+            <button className="form-button" onClick={studentbutton} disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
           </div>
         );
       case "teacher":
@@ -171,7 +174,7 @@ import axios from 'axios';
               placeholder="Teacher ID"
               onChange={(e) => setName(e.target.value)}
               value={userName}
-            /><br/>
+            /><br />
             <label className="form-label" htmlFor="password">Password:</label>
             <input
               className="form-input"
@@ -180,8 +183,10 @@ import axios from 'axios';
               placeholder="Enter Password"
               onChange={(e) => setPass(e.target.value)}
               value={userpass}
-            /><br/>
-            <button className="form-button" onClick={teacherbutton}>Login</button>
+            /><br />
+            <button className="form-button" onClick={teacherbutton} disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
           </div>
         );
     }
@@ -218,4 +223,5 @@ import axios from 'axios';
     </div>
   );
 }
+
 export default Login;

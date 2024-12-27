@@ -176,6 +176,44 @@ form button:active {
   line-height: 1.5;
 }
 
+/* Attendance Table */
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.attendance-table th, .attendance-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.attendance-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.attendance-records {
+  margin-top: 15px;
+}
+
+/* Back Button */
+.back-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
 /* Animations */
 @keyframes fadeIn {
   0% {
@@ -212,5 +250,57 @@ form button:active {
 
   form button {
     width: 100%;
+  }
+}
+
+.attendance-result {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+.attendance-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.attendance-result {
+  width: 100%;
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.attendance-table {
+  min-width: 750px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.attendance-records {
+  margin-top: 20px;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .attendance-container {
+    padding: 10px;
+  }
+  
+  .attendance-result {
+    padding: 10px;
   }
 }

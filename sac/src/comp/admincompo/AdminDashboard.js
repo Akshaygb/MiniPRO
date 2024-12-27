@@ -36,7 +36,7 @@ const AdminDashboard = ({user}) => {
        try
        {
         const  response=await axios.post("http://localhost:5000/upload-student",formdata);
-           alert("response.data")
+           alert(response.data.message)
            
        }
        catch (error) {
