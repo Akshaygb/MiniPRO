@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles/Student_details.css'
+import './Student_details.css'
 
 export default function Student_detaile({ StuDetaile }) {
   return (

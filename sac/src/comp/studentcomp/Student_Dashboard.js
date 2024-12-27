@@ -108,9 +108,12 @@ const Student_Dashboard = ({ user }) => {
             <h2>View Attendance</h2>
 
             {attendance ? (
-  <div className="attendance-result">
-    <h3>Attendance Details</h3>
-    <table className="attendance-table">
+  
+    
+    <div className=".attendance-result">
+      <h3>Attendance Details</h3>
+    
+        <table  border="1" className=".attendance-result">
       <thead>
         <tr>
           <th>USN</th>
@@ -132,11 +135,7 @@ const Student_Dashboard = ({ user }) => {
         </tr>
       </tbody>
     </table>
-    <div className="attendance-records">
-      <h4>Attendance Records</h4>
-      <p>{attendance.attendance.join(', ')}</p>
-      <p><strong>Dates:</strong> {attendance.date.join(', ')}</p>
-    </div>
+    
     <button onClick={() => setAttendance(null)} className="back-button">Go Back</button>
   </div>
 ) 

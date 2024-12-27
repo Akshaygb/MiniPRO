@@ -37,23 +37,8 @@ const Dashboard = ({ user, setStudetaile }) => {
       });
   };
 
-  const handleAttedenceView = () => {
-    const data = {
-      Teacher_id: user.Teacher_id,
-      sem: StuSem,
-      "subject code": SubId
-    };
-    axios.post("http://localhost:5000/student_detaile", data)
-      .then((response) => {
-        if (response.status === 201) {
-          setStudetaile(response.data);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("Something went wrong");
-      });
-  };
+  
+   
 
   const AttedenceButton = () => {
     if (atte === "Start") {
@@ -78,7 +63,7 @@ const Dashboard = ({ user, setStudetaile }) => {
         });
     } else {
       const data = {
-        "Teacher_id": user.id,
+        "Teacher_id": user.Teacher_id,
         "sem": StuSem,
         "subject code": SubId,
         "status": "q"
@@ -104,24 +89,48 @@ const Dashboard = ({ user, setStudetaile }) => {
       return;
     }
     let data={
-      "Teacher_id": user.id,
+      "Teacher_id": user.teacher_Id,
         "sem": StuSem,
-        "subject code": SubId,
+        "subjectcode": SubId,
         "date":date
 
     }
+    console.log(user.id)
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/attendance',data);
-      setAttendanceData(response.data);
-    } catch (err) {
+      const response = await axios.post('http://localhost:5000/attendance',data);
+      localStorage.setItem('attendanceData', JSON.stringify(response.data));
+      navigate("/attedence view")
+    } 
+    catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch attendance data.');
     } finally {
       setLoading(false);
     }
   };
+   const eliglible= async()=>
+   {
+      const data={"Teacher_id": user.teacher_Id,
+        "sem": StuSem,
+        "subjectcode": SubId,
+        "date":date
 
+    }
+    console.log(user.id)
+    setLoading(true);
+    setError('');
+    try {
+      const response = await axios.post('http://localhost:5000/eligible',data);
+      localStorage.setItem('eligibleData', JSON.stringify(response.data));
+      navigate("/attedence view")
+    } 
+    catch (err) {
+      setError(err.response?.data?.message || 'Failed to fetch attendance data.');
+    } finally {
+      setLoading(false);
+    }
+   }
   const renderSection = () => {
     switch (selectedSection) {
       case "home":
@@ -272,7 +281,7 @@ const Dashboard = ({ user, setStudetaile }) => {
             <div className="section-content">
               <div className="submit-document-container">
                 <h2>Update Student Details</h2>
-                <form onSubmit={(e) => { e.preventDefault(); handleAttedenceView(); }}>
+                <form >
                   <div>
                     <label>Semester:</label>
                     <select
@@ -326,7 +335,7 @@ const Dashboard = ({ user, setStudetaile }) => {
     <div className="section-content">
       <div className="submit-document-container">
         <h2>View Attendance</h2>
-        <form onSubmit={(e) => { e.preventDefault(); handleAttedenceView(); }}>
+        <form >
           <div><input
                 type="date"
                 value={date}
@@ -365,35 +374,12 @@ const Dashboard = ({ user, setStudetaile }) => {
               ))}
             </select>
           </div>
-          <button type="submit">Get Attendance</button>
+          <button type="submit" onClick={(e) => { e.preventDefault(); handleViewAttendance(); }}>Get Attendance</button>
           <button type="submit">Get Eligible List </button>
         </form>
 
-        {/* Display Attendance Data */}
-        {attendanceData.length > 0 ? (
-          <table>
-            <thead>
-              <tr>
-                <th>Student Name</th>
-                <th>USN</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attendanceData.map((entry, index) => (
-                <tr key={index}>
-                  <td>{entry.student_name}</td>
-                  <td>{entry.student_usn}</td>
-                  <td>{entry.date}</td>
-                  <td>{entry.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>No attendance data available.</p>
-        )}
+        
+         
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ const Login = ({ setUser }) => {
   const [userpass, setPass] = useState("");
   const [usersem, setsem] = useState("");
   const [state, setState] = useState("admin");
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const adminbutton = () => {
@@ -18,12 +18,11 @@ const Login = ({ setUser }) => {
       "password": userpass
     };
 
-    axios.post("https://localhost:5000/admin_login", data)
+    axios.post("http://localhost:5000/admin_login", data)
       .then((response) => {
         setLoading(false); // Set loading state to false when request completes
         if (response.status === 201) {
           setUser(response.data.user);
-          localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user in localStorage
           alert("Login Successful");
           navigate("/admin");
         }
@@ -48,12 +47,11 @@ const Login = ({ setUser }) => {
       "password": userpass
     };
 
-    axios.post("https://localhost:5000/student_login", data)
+    axios.post("http://localhost:5000/student_login", data)
       .then((response) => {
         setLoading(false);
         if (response.status === 201) {
           setUser(response.data.user);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
           alert("Login Successful");
           navigate("/student");
         }
@@ -82,7 +80,6 @@ const Login = ({ setUser }) => {
         setLoading(false);
         if (response.status === 201) {
           setUser(response.data.user);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
           console.log(response.data.user);
           alert("Login Successful");
           navigate("/dashboard");

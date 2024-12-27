@@ -12,7 +12,7 @@ from datetime import datetime
 from document import parse_docx_table,parse_pdf_table
 import base64
 app = Flask(__name__)
-CORS(app, resources={r"/hi": {"origins": "http://localhost:3000"}})
+CORS(app)  # Adjust the origin as needed
 
 
 client = MongoClient("mongodb://localhost:27017/")
@@ -94,6 +94,7 @@ def admin_login():
     data = request.json
     tch = data.get("id")
     password = data.get('password')
+    print(tch)
     admin_collection=db['Admin']
     if not password:
         return jsonify({"message": "Password is required"}), 400
@@ -166,31 +167,6 @@ def upload_student():
     except Exception as e:
         return jsonify({"message": f"Error saving student data: {str(e)}"}), 500
 
-# @app.route("/student_login", methods=['POST'])
-# def student_login():
-#     data = request.json
-#     usn = data.get("id")  # Ensure you use 'usn' here, not 'name'
-#     sem = data.get("sem")
-#     password = data.get("password")
-#     print(data)
-#     if not all([usn, sem, password]):
-#         return jsonify({"message": "All fields (usn, sem, password) are required"}), 400
-
-#     collection = f"sem_{sem}"
-#     if collection not in db.list_collection_names():
-#         return jsonify({"message": "Invalid semester"}), 400
-    
-
-#     student_collection = db[collection]
-#     user = student_collection.find_one({"usn": usn})
-#     print("User retrieved:", user)
-
-#     if not user:
-#         return jsonify({"message": "Invalid USN"}), 401
-#     if user["password"] != password:
-#         return jsonify({"message": "Invalid password"}), 401
-
-#     return jsonify({"message": "Login Successful","user":{"name":user["name"],"usn":user["usn"]}}), 201
 
 @app.route("/student_login", methods=['POST'])
 def student_login():
@@ -501,68 +477,16 @@ def start_attendance():
     return jsonify({"message": "No faces detected."})
 
 
-
-
-@app.route("/Get-Atttedence",methods=['POST'])
-def get_attendance():
-    data=request.json
-    usn=data["usn"]
-
-    sub=data["TeaName"]
-    name=teacher_collection.find_one({"name":sub})
-    
-    sem=data["sem"]
-    coll=f"{sub}_{sem}"
-    print(coll)
-    # Find collections that end with 'CS085_1'
-    matching_collections = []
-    for col in db.list_collection_names():
-       if col.endswith(coll):
-           matching_collections.append(col)
-    student=db[matching_collections[0]]
-    student_atte=student.find_one({"usn":usn})
-    attede=student_atte.get("attendance",[])
-    date=student_atte.get("date",[])
-    total_days=len(attede)
-    present=attede.count('Present')
-    Absent=attede.count('Absent')
-    percentage= (present / total_days) * 100 if total_days > 0 else 0
-    print(date)
-    print(attede)
-    return jsonify({
-        "message": "ok",
-        "data": {
-            "attendance": attede,
-            "date": date,
-            "total_days": total_days,
-            "present_days": present,
-            "absent_days": Absent,
-            "percentage": f"{percentage:.2f}%"
-        }
-    })
-
-
-
-from flask import Flask, request, jsonify
-from pymongo import MongoClient
-from datetime import datetime
-
-app = Flask(__name__)
-
-# MongoDB connection
-client = MongoClient("mongodb://localhost:27017/")  # Update with your MongoDB URI
-db = client["attendance_db"]  # Replace with your database name
-
-@app.route('/get_attendance_by_course_and_date', methods=['POST'])
-def get_attendance_by_course_and_date():
+@app.route('/attendance', methods=['POST'])
+def attendance():
     try:
         data = request.json
         teacher_id = data.get("Teacher_id")
         sem = data.get("sem")
-        subcode = data.get("subject_code")  # Fixed key name to match your example
+        subcode = data.get("subjectcode")  # Fixed key name to match your example
         colle = f"{teacher_id}_{subcode}_{sem}"
         date = data.get("date")
-        
+        print(teacher_id," ",sem," ",subcode," ",date)
         # Validate input parameters
         if not subcode or not date or not teacher_id or not sem:
             return jsonify({"message": "Missing parameters: Teacher_id, sem, subject_code, or date"}), 400
@@ -597,19 +521,51 @@ def get_attendance_by_course_and_date():
 
         # Return filtered results or handle empty response
         if not result:
-            return jsonify({"message": "No attendance data found for the given date."}), 404
-
+            return jsonify({"message": "No attendance data found for the given date."}), 200
+        print(result)
         return jsonify(result), 200
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
-@app.route("/hi", methods=['POST'])
-def hi():
+@app.route("/Get-Atttedence",methods=['POST'])
+def get_attendance():
+    data=request.json
+    usn=data["usn"]
 
-        data = request.json  # Parse JSON payload from the request
-        print("Received data:", data)  # Log the received data
-        return jsonify({"message": "Data received successfully"}), 201  # Return a JSON response with status 201  # Log any errors
+    sub=data["TeaName"]
+    name=teacher_collection.find_one({"name":sub})
+    
+    sem=data["sem"]
+    coll=f"{sub}_{sem}"
+    # Find collections that end with 'CS085_1'
+    matching_collections = []
+    for col in db.list_collection_names():
+       if col.endswith(coll):
+           matching_collections.append(col)
+    student=db[matching_collections[0]]
+    student_atte=student.find_one({"usn":usn})
+    attede=student_atte.get("attendance",[])
+    date=student_atte.get("date",[])
+    total_days=len(attede)
+    present=attede.count('Present')
+    Absent=attede.count('Absent')
+    percentage= (present / total_days) * 100 if total_days > 0 else 0
+    print(date)
+    print(attede)
+    return jsonify({
+        "message": "ok",
+        "data": {
+            "attendance": attede,
+            "date": date,
+            "total_days": total_days,
+            "present_days": present,
+            "absent_days": Absent,
+            "percentage": f"{percentage:.2f}%"
+        }
+    })
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
