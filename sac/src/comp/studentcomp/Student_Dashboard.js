@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import axios from 'axios';
 import './Student_Dashboard.css';
 
-const Student_Dashboard = ({ user }) => {
+const Student_Dashboard = ({}) => {
   const [selectState, setSelectState] = useState('home');
   const [usn, setUsn] = useState('');
+  const[user,setuser]=useState(null)
   const [sem, setSem] = useState('');
   const [TeaName, setTeaName] = useState('');
   const [subjectCode, setSubjectCode] = useState('');
   const [document, setDocument] = useState(null);
   const [attendance, setAttendance] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  useEffect(() => {
+    const dashboardData = JSON.parse(localStorage.getItem('studentDetail'));
+  
+    if (dashboardData) {
+      setuser(dashboardData)
+      console.log(dashboardData);
+    } else {
+      // No data found in localStorage
+      console.log("No data found for 'dashboard'");
+    }
+    }, []);
 
   const handleDocumentSubmit = async () => {
     if (!usn || !sem || !subjectCode || !document) {
@@ -39,7 +51,7 @@ const Student_Dashboard = ({ user }) => {
     }
 
     const data = {
-      "usn":user.usn,
+      "usn":user?.usn,
       "sem": sem,
       "TeaName": subjectCode,
     };
@@ -126,8 +138,8 @@ const Student_Dashboard = ({ user }) => {
       </thead>
       <tbody>
         <tr>
-          <td>{user.usn}</td>
-          <td>{user.name}</td>
+          <td>{user?.usn}</td>
+          <td>{user?.name}</td>
           <td>{attendance.total_days}</td>
           <td>{attendance.present_days}</td>
           <td>{attendance.absent_days}</td>
@@ -169,7 +181,7 @@ const Student_Dashboard = ({ user }) => {
                     required
                   >
                     <option value="">Select Teacher Name</option>
-                    {user.teacher.map((teacher, index) => (
+                    {user?.teacher.map((teacher, index) => (
                       <option key={index} value={teacher}>
                         {teacher}
                       </option>
@@ -202,7 +214,7 @@ const Student_Dashboard = ({ user }) => {
     <div className="dashboard-container">
       <h2>Student Dashboard</h2>
       <div className="dashboard-content">
-        <h3>Welcome, {user.name}!</h3>
+        <h3>Welcome, {user?.name}!</h3>
         <nav>
           <ul>
             <li

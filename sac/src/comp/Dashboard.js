@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './styles/TeacherDashboard.css';
 
-const Dashboard = ({ user, setStudetaile }) => {
+const Dashboard = ({  setStudetaile }) => {
   const navigate = useNavigate();
+  const [user,setuser]=useState(null)
   const [selectedSection, setSelectedSection] = useState('home');
   const [SubId, setSubId] = useState('');
   const [StuSem, setStuSem] = useState('');
@@ -13,10 +14,22 @@ const Dashboard = ({ user, setStudetaile }) => {
   const [date, setDate] = useState('');
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [usn,setUSN]=useState('')
   const [error, setError] = useState('');
 
+useEffect(() => {
+  const dashboardData = JSON.parse(localStorage.getItem('dashboard'));
 
-
+  if (dashboardData) {
+    setuser(dashboardData)
+    console.log(dashboardData);
+  } else {
+    // No data found in localStorage
+    console.log("No data found for 'dashboard'");
+  }
+  }, []);
+  
+  
 
   const handleStudentdetaile = () => {
     const data = {
@@ -114,7 +127,6 @@ const Dashboard = ({ user, setStudetaile }) => {
       const data={"Teacher_id": user.teacher_Id,
         "sem": StuSem,
         "subjectcode": SubId,
-        "date":date
 
     }
     console.log(user.id)
@@ -123,13 +135,34 @@ const Dashboard = ({ user, setStudetaile }) => {
     try {
       const response = await axios.post('http://localhost:5000/eligible',data);
       localStorage.setItem('eligibleData', JSON.stringify(response.data));
-      navigate("/attedence view")
+      navigate("/eligibel")
     } 
     catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch attendance data.');
     } finally {
       setLoading(false);
     }
+   }
+const update=async()=>
+   {
+    const data={"Teacher_id": user.teacher_Id,
+      "sem": StuSem,
+      "subjectcode": SubId,
+      "usn":usn
+  }
+  console.log(data)
+  setLoading(true);
+  setError('');
+  try {
+    const response = await axios.post('http://localhost:5000/datafetch',data);
+    localStorage.setItem('updateData', JSON.stringify(response.data));
+    navigate("/update")
+  } 
+  catch (err) {
+    setError(err.response?.data?.message || 'Failed to fetch attendance data.');
+  } finally {
+    setLoading(false);
+  }
    }
   const renderSection = () => {
     switch (selectedSection) {
@@ -154,7 +187,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                           className="select-list"
                         >
                           <option value="">Select Semester</option>
-                          {user.sem.map((sem, index) => (
+                          {user?.sem.map((sem, index) => (
                             <option key={index} value={sem}>
                               {sem}
                             </option>
@@ -171,7 +204,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                         className="select-list"
                       >
                         <option value="">Select Subject Code</option>
-                        {user.subject_code.map((code, index) => (
+                        {user?.subject_code.map((code, index) => (
                           <option key={index} value={code}>
                             {code}
                           </option>
@@ -201,7 +234,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                       className="select-list"
                     >
                       <option value="">Select Semester</option>
-                      {user.sem.map((sem, index) => (
+                      {user?.sem.map((sem, index) => (
                         <option key={index} value={sem}>
                           {sem}
                         </option>
@@ -217,7 +250,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                       className="select-list"
                     >
                       <option value="">Select Subject Code</option>
-                      {user.subject_code.map((code, index) => (
+                      {user?.subject_code.map((code, index) => (
                         <option key={index} value={code}>
                           {code}
                         </option>
@@ -246,7 +279,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                       className="select-list"
                     >
                       <option value="">Select Semester</option>
-                      {user.sem.map((sem, index) => (
+                      {user?.sem.map((sem, index) => (
                         <option key={index} value={sem}>
                           {sem}
                         </option>
@@ -262,7 +295,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                       className="select-list"
                     >
                       <option value="">Select Subject Code</option>
-                      {user.subject_code.map((code, index) => (
+                      {user?.subject_code.map((code, index) => (
                         <option key={index} value={code}>
                           {code}
                         </option>
@@ -291,7 +324,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                       className="select-list"
                     >
                       <option value="">Select Semester</option>
-                      {user.sem.map((sem, index) => (
+                      {user?.sem.map((sem, index) => (
                         <option key={index} value={sem}>
                           {sem}
                         </option>
@@ -307,7 +340,7 @@ const Dashboard = ({ user, setStudetaile }) => {
                       className="select-list"
                     >
                       <option value="">Select Subject Code</option>
-                      {user.subject_code.map((code, index) => (
+                      {user?.subject_code.map((code, index) => (
                         <option key={index} value={code}>
                           {code}
                         </option>
@@ -318,11 +351,14 @@ const Dashboard = ({ user, setStudetaile }) => {
                     <label>Student USN:</label>
                     <input
                       type="text"
+                      value={usn}
+                      onChange={(e) => setUSN(e.target.value)}
                       placeholder="Enter Student USN"
                       required
                     />
                   </div>
-                  <button type="submit">Submit</button>
+                  {/* onClick={(e) => { e.preventDefault(); handleViewAttendance(); }} */}
+                  <button type="submit" onClick={(e)=>{e.preventDefault(); update()}}>Submit</button>
                 </form>
               </div>
             </div>
@@ -336,12 +372,19 @@ const Dashboard = ({ user, setStudetaile }) => {
       <div className="submit-document-container">
         <h2>View Attendance</h2>
         <form >
-          <div><input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                placeholder="Select Date"
-              />Select Date
+          <div><div className="date-input-container">
+  <label className="date-input-label" htmlFor="date">
+    Select Date
+  </label>
+  <input
+    id="date"
+    type="date"
+    className="date-input"
+    value={date}
+    onChange={(e) => setDate(e.target.value)}
+    placeholder="Select Date"
+  />
+</div>
            
             <label>Semester:</label>
             <select
@@ -351,7 +394,7 @@ const Dashboard = ({ user, setStudetaile }) => {
               className="select-list"
             >
               <option value="">Select Semester</option>
-              {user.sem.map((sem, index) => (
+              {user?.sem.map((sem, index) => (
                 <option key={index} value={sem}>
                   {sem}
                 </option>
@@ -367,16 +410,36 @@ const Dashboard = ({ user, setStudetaile }) => {
               className="select-list"
             >
               <option value="">Select Subject Code</option>
-              {user.subject_code.map((code, index) => (
+              {user?.subject_code.map((code, index) => (
                 <option key={index} value={code}>
                   {code}
                 </option>
               ))}
             </select>
           </div>
-          <button type="submit" onClick={(e) => { e.preventDefault(); handleViewAttendance(); }}>Get Attendance</button>
-          <button type="submit">Get Eligible List </button>
-        </form>
+          <div className="dashboard-buttons-container">
+  <button
+    type="submit"
+    className="dashboard-button get-attendance-btn"
+    onClick={(e) => {
+      e.preventDefault();
+      handleViewAttendance();
+    }}
+  >
+    Get Attendance
+  </button>
+  <button
+    type="submit"
+    className="dashboard-button get-eligible-btn"
+    onClick={(e) => {
+      e.preventDefault();
+      eliglible();
+    }}
+  >
+    Get Eligible List
+  </button>
+</div>
+</form>
 
         
          
@@ -392,7 +455,7 @@ const Dashboard = ({ user, setStudetaile }) => {
     <div className="admin-dashboard">
       <div className="sidebar">
         <h2>Teacher Dashboard</h2>
-        <p className="admin-name">Welcome, {user.name}!</p>
+        <p className="admin-name">Welcome, {user?.name}!</p>
         <ul>
           <li
             className={selectedSection === 'home' ? 'active' : ''}
@@ -416,7 +479,7 @@ const Dashboard = ({ user, setStudetaile }) => {
             className={selectedSection === 'update' ? 'active' : ''}
             onClick={() => setSelectedSection('update')}
           >
-            Update Student
+            Update Student Attedance
           </li>
           <li
             className={selectedSection === 'notification' ? 'active' : ''}

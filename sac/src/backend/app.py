@@ -565,7 +565,105 @@ def get_attendance():
         }
     })
 
+@app.route('/eligible', methods=['POST'])
+def eligible():
+    data = request.json
+    teacher_id = data.get("Teacher_id")
+    sem = data.get("sem")
+    subcode = data.get("subjectcode")
+    colle = f"{teacher_id}_{subcode}_{sem}"
+    # Log the input details
+    print(f"Teacher ID: {teacher_id}, Semester: {sem}, Subject Code: {subcode}")
+    tea_coll=db[colle]
+    # Calculate attendance percentage for each student
+    eligible_students = []
+    non_eligible_students = []
+    c =tea_coll.find()
+    for student in c:
+        total_classes = len(student["attendance"])
+        attended_classes = student["attendance"].count("Present")
+        attendance_percentage = (attended_classes / total_classes) * 100
 
+        student_data = {
+            "usn": student["usn"],
+            "name": student["name"],
+            "attended": attended_classes,
+            "total": total_classes,
+            "percentage": round(attendance_percentage, 2)
+        }
+
+        if attendance_percentage >= 85:
+            eligible_students.append(student_data)
+        else:
+            non_eligible_students.append(student_data)
+
+    # Response structure
+    response = {
+        "eligible_students": eligible_students,
+        "non_eligible_students": non_eligible_students
+    }
+    print(response)
+    return jsonify(response), 200
+
+@app.route('/datafetch', methods=['POST'])
+def Ddtafetch():
+    data = request.json
+    teacher_id = data.get("Teacher_id")
+    sem = data.get("sem")
+    subcode = data.get("subjectcode")
+    usn=data.get("usn")
+    colle = f"{teacher_id}_{subcode}_{sem}"
+    # Log the input details
+    print(f"Teacher ID: {teacher_id}, Semester: {sem}, Subject Code: {subcode}")
+    tea_coll=db[colle]
+    fdata = tea_coll.find_one({"usn": usn}, {"_id": 0})  # Exclude `_id` from the query result
+
+    if fdata:
+        fdata["colle"] = colle 
+        return jsonify(fdata), 200
+    return jsonify({"message": "Student not found"}), 404
+    
+@app.route('/updateattendance', methods=['POST'])
+def update_attendance():
+    data = request.json
+    usn = data.get('usn')
+    updates = data.get('updatedAttendanceData')
+    colle=data.get("colle")# List of updates containing date, time, and new attendance status
+    print(colle)
+    print(usn,"  ",updates)
+    collection=db[colle]
+    if not usn or not updates:
+        return jsonify({"error": "Missing USN or updates"}), 400
+    try:
+        for update in updates:
+            date = update['date']
+            time = update['time']
+            new_status = update['attendance']
+            
+            # Fetch the document to identify index of date and time
+            document = collection.find_one({"usn": usn})
+
+            if not document:
+                return jsonify({"error": f"No record found for USN: {usn}"}), 404
+
+            # Find index of the date and time
+            if date in document['date'] and time in document['time']:
+                index = document['date'].index(date)  # Assuming date and time are consistent in indexing
+
+                # Update the attendance at the found index
+                collection.update_one(
+                    {"usn": usn},
+                    {"$set": {f"attendance.{index}": new_status}}
+                )
+            else:
+                return jsonify({"error": f"No matching record for date: {date} and time: {time}"}), 404
+
+        return jsonify({"message": "Attendance updated successfully"}), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "Failed to update attendance"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+

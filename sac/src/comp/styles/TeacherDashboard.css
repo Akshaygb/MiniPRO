@@ -192,3 +192,84 @@
   margin-bottom: 8px;
   color: #333;
 }
+.date-input-container {
+  margin-top: 20px;
+}
+
+.date-input-label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
+  display: block;
+}
+
+.date-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  color: #3583d2;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.date-input:focus {
+  border-color: #3583d2;
+  outline: none;
+  box-shadow: 0 0 5px rgba(53, 131, 210, 0.5);
+}
+
+.date-input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+.dashboard-buttons-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.dashboard-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #3583d2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-button:hover {
+  background-color: #2a6ca1;
+  transform: translateY(-3px);
+}
+
+.dashboard-button:active {
+  background-color: #1e5682;
+  transform: translateY(0);
+}
+
+.dashboard-button:focus {
+  outline: 2px solid #1e87f0;
+  outline-offset: 2px;
+}
+
+.get-attendance-btn {
+  background-color: #4caf50;
+}
+
+.get-attendance-btn:hover {
+  background-color: #45a049;
+}
+
+.get-eligible-btn {
+  background-color: #f44336;
+}
+
+.get-eligible-btn:hover {
+  background-color: #d32f2f;
+}

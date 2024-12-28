@@ -51,7 +51,8 @@ const Login = ({ setUser }) => {
       .then((response) => {
         setLoading(false);
         if (response.status === 201) {
-          setUser(response.data.user);
+          localStorage.setItem('studentDetail', JSON.stringify(response.data.user));
+          console.log(response.data.user)
           alert("Login Successful");
           navigate("/student");
         }
@@ -79,7 +80,7 @@ const Login = ({ setUser }) => {
       .then((response) => {
         setLoading(false);
         if (response.status === 201) {
-          setUser(response.data.user);
+          localStorage.setItem('dashboard', JSON.stringify(response.data.user));
           console.log(response.data.user);
           alert("Login Successful");
           navigate("/dashboard");

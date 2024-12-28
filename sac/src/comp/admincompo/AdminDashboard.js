@@ -176,7 +176,7 @@ const AdminDashboard = ({user}) => {
                 );
             case 'attendance':
                 return <div className="section-content">Review and Manage Attendance Logs.</div>;
-            case 'reports':
+            case 'Update':
                 return <div className="section-content">Generate and View Attendance Reports.</div>;
             default:
                 return <div className="section-content">Welcome to the Admin Dashboard! Select a section to manage.</div>;
@@ -208,10 +208,10 @@ const AdminDashboard = ({user}) => {
                         Manage Teachers
                     </li>
                     <li
-                        className={selectedSection === 'attendance' ? 'active' : ''}
-                        onClick={() => setSelectedSection('attendance')}
+                        className={selectedSection === 'Update' ? 'active' : ''}
+                        onClick={() => setSelectedSection('Update')}
                     >
-                        Attendance Logs
+                        Update Details
                     </li>
                 </ul>
             </div>

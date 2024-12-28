@@ -1,0 +1,145 @@
+
+#updateStudentContainer {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+  }
+  
+  .studentHeader {
+    text-align: center;
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease;
+  }
+  
+  .studentDetails {
+    color: #555;
+    font-weight: normal;
+    margin: 10px 0;
+    animation: fadeIn 1.5s ease;
+  }
+  
+  .attendanceTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    animation: fadeInUp 1.2s ease;
+  }
+  
+  .attendanceTable thead th {
+    background: #3583d2;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  .attendanceTable tbody td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 14px;
+  }
+  
+  .attendanceTable tbody tr:nth-child(even) {
+    background: #f2f2f2;
+  }
+  
+  .attendanceTable tbody tr:hover {
+    background: #eaf2fa;
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+  }
+  
+  .attendanceSelect {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .attendanceSelect:focus {
+    border-color: #3583d2;
+  }
+  
+  .actionButtons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .actionButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .actionButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  #submitButton {
+    background-color: #4caf50;
+  }
+  
+  #submitButton:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+  }
+  
+  #cancelButton {
+    background-color: #f44336;
+  }
+  
+  #cancelButton:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+  }
+  
+  .actionButton:active {
+    transform: translateY(0);
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  

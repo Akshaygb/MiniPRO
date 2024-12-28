@@ -7,6 +7,8 @@ import Student from './comp/studentcomp/Student_Dashboard.js';
 import Admin from './comp/admincompo/AdminDashboard.js';
 import Student_detaile from './comp/studentcomp/Student_detaile.js';
 import Attedence_view from './comp/studentcomp/Attedence_view.js';
+import Eligibel from './comp/studentcomp/Eligibel.js';
+import UpdateStudent from './comp/studentcomp/UpdateStudent.js'
 export default function App() {
    const [user, setUser] = useState(null); // Manage user state globally
    const [StuDetaile, setStudetaile] = useState(null);
@@ -24,6 +26,8 @@ export default function App() {
             <Route path='/student_details' element={<Student_detaile StuDetaile={StuDetaile} />}
              />
               <Route path='/attedence view' element={<Attedence_view user={user} />} />
+              <Route path='/eligibel' element={<Eligibel />} />
+              <Route path='/update' element={<UpdateStudent />}/>
          </Routes>
       </BrowserRouter>
    );
